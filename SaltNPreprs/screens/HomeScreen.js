@@ -1,5 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React, { Component } from 'react';
+import FetchExample from '../components/ApiCall'
 import {
   Image,
   Platform,
@@ -238,10 +239,12 @@ function handleHelpPress() {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 40,
     flex: 1,
     paddingTop: 0,
     backgroundColor: '#fff',
   },
+<<<<<<< HEAD
   header: {
     fontSize: 35,
     textAlign: 'center',
@@ -272,6 +275,10 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 20,
     textAlign: 'center'
+=======
+  api: {
+    marginTop: 100,
+>>>>>>> dat
   },
   developmentModeText: {
     marginBottom: 20,
