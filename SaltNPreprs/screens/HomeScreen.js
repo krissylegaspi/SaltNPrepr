@@ -22,6 +22,7 @@ import {
 
 
 import { MonoText } from '../components/StyledText';
+import {config,deleteItem,addItem,readItem} from '../components/src/firebaseConfig'
 
 // var dismissKeyboard = require('react-native-dismisskeyboard');
 // import {
