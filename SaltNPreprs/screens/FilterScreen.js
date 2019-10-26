@@ -142,9 +142,9 @@ export default class HomeScreen extends React.Component {
 
           <TouchableOpacity
             style={styles.saveButton}
-            onPress={()=>{this.props.navigation.navigate('FilterRoute')}}
+            onPress={this.displayData}
           >
-            <Text style={styles.saveButtonText}>Filter</Text>
+            <Text style={styles.saveButtonText}>Display</Text>
           </TouchableOpacity>
 
           </View>
