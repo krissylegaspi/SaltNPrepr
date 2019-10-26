@@ -11,8 +11,16 @@ import {
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
+import {config,deleteItem,addItem,readItem} from '../components/src/firebaseConfig'
 
 export default function HomeScreen() {
+  
+  config();
+  deleteItem("users/")
+  
+ 
+
+  
   return (
     <View style={styles.container}>
       <ScrollView
@@ -32,8 +40,8 @@ export default function HomeScreen() {
         <View style={styles.getStartedContainer}>
           <DevelopmentModeNotice />
 
-          <Text style={styles.getStartedText}>Get started by opening</Text>
-
+          <Text style={styles.getStartedText}>Dat sux</Text>
+          
           <View
             style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
             <MonoText>screens/HomeScreen.js</MonoText>
