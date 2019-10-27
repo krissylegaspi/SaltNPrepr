@@ -15,7 +15,7 @@ export default createAppContainer(
     // Read more at https://reactnavigation.org/docs/en/auth-flow.html
     Main: MainTabNavigator,
     FilterRoute: FilterScreen,
-    BackButton: MainTabNavigator
+    BackButton: MainTabNavigator,
     ResultsRoute: ApiCall
   })
 );
