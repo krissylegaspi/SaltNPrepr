@@ -1,5 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React, { Component } from 'react';
+import FetchExample from '../components/ApiCall'
 import {
   Image,
   Platform,
@@ -22,6 +23,7 @@ import {
 
 import FoodCard from '../components/FoodCard'
 import { MonoText } from '../components/StyledText';
+import * as firebase from 'firebase'
 
 // var dismissKeyboard = require('react-native-dismisskeyboard');
 // import {
@@ -33,8 +35,14 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.state = {
       input:'',
-      array: [],
     };
+
+    this.array = []
+
+    firebase.database().ref("/user/").update({
+
+      foodItems : []
+    })
     this.handleChangeInput = this.handleChangeInput.bind(this);
     this.saveData = this.saveData.bind(this);
   }
@@ -70,10 +78,14 @@ export default class HomeScreen extends React.Component {
       this.array = this.state.input;
     }
     else {
-      this.array += this.state.input;
+      this.array.push(this.state.input.trim());
     }
     this.state.input = '';
-    console.log(this.array);
+    console.log(this.array.length);
+    
+    firebase.database().ref('/user/').update({
+      foodItems: this.array
+    });
   }
 
   arrayFunction=(item)=>{
@@ -228,6 +240,7 @@ function handleHelpPress() {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 40,
     flex: 1,
     paddingTop: 0,
     backgroundColor: '#fff',

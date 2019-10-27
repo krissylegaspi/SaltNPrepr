@@ -4,6 +4,10 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import MainTabNavigator from './MainTabNavigator';
 import FilterScreen from '../screens/FilterScreen';
 
+import {config} from '../components/src/firebaseConfig'
+
+config()
+
 export default createAppContainer(
   createSwitchNavigator({
     // You could add another route here for authentication.
