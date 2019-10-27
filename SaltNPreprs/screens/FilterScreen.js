@@ -11,118 +11,141 @@ import {
   Keyboard,
   AsyncStorage,
   Alert,
-  dismissKeyboard
+  dismissKeyboard,
+  BackHandler,
 } from 'react-native';
 import {
   Form,
   Button,
   Icon,
-  Text
+  Text,
 } from 'native-base';
+import {
+    HeaderBackButton,
+    createAppContainer,
+} from 'react-navigation';
+import {
+    createStackNavigator,
+    FourStack,
+    Tabs,
+    ProfileStack,
+} from 'react-navigation-stack';
+
+import {
+    CheckBox,
+} from 'react-native-elements';
 
 
 import { MonoText } from '../components/StyledText';
+import HomeScreen from './HomeScreen';
 
 // var dismissKeyboard = require('react-native-dismisskeyboard');
 // import {
 //   dismissKeyboard
 // } from 'react-native-dismiss-keyboard';
 
-export default class HomeScreen extends React.Component {
+export default class FilterScreen extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      input:'',
-      array: [],
-    };
-    this.handleChangeInput = this.handleChangeInput.bind(this);
-    this.saveData = this.saveData.bind(this);
-  }
+        input:'',
+        array: [],
+        checked: false,
+        veganCheck: false,
+        vegetarianCheck: false,
+        lactoseCheck: false,
+        GlutenCheck: false,
+        peanutCheck: false,
+        calorieCheck: false
+      }
+      this.handleChangeInput = this.handleChangeInput.bind(this);
+      this.saveData = this.saveData.bind(this);
+      this.flipCheck = this.flipCheck.bind(this);
+    }   
 
   handleChangeInput = (text) => {
-    this.setState({input:text});
+
   }
 
   componentDidMount() {
-    // Jehd
-    // AsyncStorage.getItem("key").then((value) => {
-    //   this.setState(JSON.parse(value));
-    // });
+
   }
-
-  // saveData = () => {
-  //   const {serverName,user} = this.state;
-  //   let myArray = this.state.array;
-  //   AsyncStorage.setItem('key', JSON.stringify(this.state));
-  //   AsyncStorage.mergeItem('key', JSON.stringify(this.state), () => {
-  //     AsyncStorage.getItem('key', (err, result) => {
-  //       console.log(result);
-  //     });
-  //   });
-
-  //   alert(serverName + '' + user + ' your data has been saved ');
-  // }
 
   saveData() {
-    this.setState({})
-    if (this.array == undefined) {
-      console.log("empty");
-      this.array = this.state.input;
-    }
-    else {
-      this.array += this.state.input;
-    }
-    this.state.input = '';
-    console.log(this.array);
-  }
 
-  arrayFunction=(item)=>{
-    Alert.alert(item);
   }
-
-  showData = async() => {
-    let myArray = await AsyncStorage.getItem('myArray');
-    let d = JSON.parse(myArray);
-    alert(d.serverName + ' ' + d.user);
- }
   
-  
+  flipCheck(checkbox){
+    this.setState({checkbox : !checkbox})
+    return this.state.checkbox
+  }
   render() {
+
+    console.log("reRendered")
     return (
+      
       <ScrollView>
         <View style={styles.inputContainer}>
           <View>
             <Text style={styles.header}>Salt & Prepr</Text>
+            <Text style={styles.title}>Check your preferences:</Text>
           </View>
         </View>
       
       
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Ingredient"
-            maxLength={50}
-            onBlur={Keyboard.dismiss}
-            onChangeText={this.handleChangeInput}
-            value={this.state.input}
-            ref={input => { this.textInput = input }}
-            // style={styles.additionalTextInput}
-            multipline={true}
-            autoCapitalize="sentences"
-            autoCorrect={true}
-            returnKeyType="done"
-            keyboardType="default"
-            // onChangeText={(orderInstructions) => this.setState({orderInstructions})}
-          />
+        <CheckBox
+            onPress={this.flipCheck}
+            style={styles.checkStyle}
+            title='Vegan'
+            checked={this.state.veganCheck? true : false}
+            leftText={"CheckBox"}
+        />
+        <CheckBox
+            status={this.state.vegetarianCheck ? 'checked' : 'unchecked'}
+            onPress={() => { this.setState({ veganCheck: !vegetarianCheck}); }}
+            style={styles.checkStyle}
+            value={this.state.vegetarianCheck}
+            title='Vegetarian'
+            checked={this.state.vegetarianCheck}
+            leftText={"CheckBox"}
+        />
+        <CheckBox
+            status={this.state.lactoseCheck? 'checked' : 'unchecked'}
+            onPress={() => { this.setState({ lactoseCheck: !lactoseCheck}); }}
+            style={styles.checkStyle}
+            value={this.state.lactoseCheck}
+            title='Lactose Intolerance'
+            checked={this.state.lactoseCheck}
+            leftText={"CheckBox"}
+        />
+        <CheckBox
+            status={this.state.GlutenCheck ? 'checked' : 'unchecked'}
+            onPress={() => { this.setState({ GlutenCheck: !GlutenCheck}); }}
+            style={styles.checkStyle}
+            value={this.state.GlutenCheck}
+            title='Gluten Free'
+            checked={this.state.GlutenCheck}
+            leftText={"CheckBox"}
+        />
+        <CheckBox
+            status={this.state.peanutCheck ? 'checked' : 'unchecked'}
+            onPress={() => { this.setState({ peanutCheck: !peanutCheck}); }}
+            style={styles.checkStyle}
+            value={this.state.peanutCheck}
+            title='Peanut Allergy'
+            checked={this.state.peanutCheck}
+            leftText={"CheckBox"}
+        />
+        <CheckBox
+            status={this.state.calorieCheck ? 'checked' : 'unchecked'}
+            onPress={() => { this.setState({ calorieCheck: !calorieCheck}); }}
+            style={styles.checkStyle}
+            value={this.state.calorieCheck}
+            title='<500 Calories'
+            checked={this.state.calorieCheck}
+            leftText={"CheckBox"}
+        />
 
-          
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Text>
-            {this.array}
-          </Text>
-        </View>
   
         <View style={styles.inputContainer}>
           <TouchableOpacity
@@ -130,8 +153,6 @@ export default class HomeScreen extends React.Component {
             onPress={ () =>
               {this.saveData()
                 this.textInput.clear()
-                
-                // console.log(this.state.input);
               }
             }
             // onKeyPress = {()=>{this.saveData;}}
@@ -142,49 +163,21 @@ export default class HomeScreen extends React.Component {
 
           <TouchableOpacity
             style={styles.saveButton}
-            onPress={this.displayData}
+            onPress={()=>{this.props.navigation.navigate('BackButton')}}
+            // onPress={()=>{this.handleBackButtonClick.bind(this)}}
           >
-            <Text style={styles.saveButtonText}>Display</Text>
+            <Text style={styles.saveButtonText}>Back</Text>
           </TouchableOpacity>
 
           </View>
       </ScrollView>
     );
-
     
   }
-
-
-  
-  // saveData() {
-  //   let user = 'John Doe';
-  //   AsyncStorage.setItem('user', user);
-  // }
-
-  // displayData = async () => {
-  //   try {
-  //     // let user = await AsyncStorage.getItem('user');
-  //     let user = this.state.input;
-  //     alert(user);
-  //   }
-
-    // catch(error) {
-    //   alert(error);
-    // }
-
-
-  // }
-
 }
 
-// saveData() {
-//   alert('Testing');
 
-// }
-
-
-
-HomeScreen.navigationOptions = {
+FilterScreen.navigationOptions = {
   header: null,
 };
 
@@ -223,7 +216,18 @@ function handleHelpPress() {
   );
 }
 
+const navigationOptions = ({ navigation }) => ({
+    headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
+})
 
+
+const MainNavigator = createStackNavigator({
+    Home: {screen: HomeScreen},
+    Profile: {screen: FilterScreen},
+  });
+  
+const App = createAppContainer(MainNavigator);
+  
 
 const styles = StyleSheet.create({
   container: {
@@ -232,14 +236,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    fontSize: 35,
+    fontSize: 50,
     textAlign: 'center',
     paddingTop: 20,
     margin: 10,
     fontWeight: 'bold'
   },
+  title: {
+    fontSize: 35,
+    textAlign: 'center',
+    paddingTop: 10,
+    margin: 10,
+  },
+  text: {
+    fontSize: 25,
+  },
   inputContainer: {
-    paddingTop: 60
+    paddingTop: 60,
+    margin: 10,
   },
   textInput: {
     borderColor: '#CCCCCC',
@@ -255,7 +269,7 @@ const styles = StyleSheet.create({
     borderColor: '#007BFF',
     backgroundColor: '#007BFF',
     padding: 15,
-    margin: 5
+    margin: 10
   },
   saveButtonText: {
     color: '#FFFFFF',
@@ -345,3 +359,4 @@ const styles = StyleSheet.create({
     color: '#2e78b7',
   },
 });
+

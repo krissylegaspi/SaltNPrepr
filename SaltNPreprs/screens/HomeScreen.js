@@ -20,7 +20,7 @@ import {
   Text
 } from 'native-base';
 
-
+import FoodCard from '../components/FoodCard'
 import { MonoText } from '../components/StyledText';
 
 // var dismissKeyboard = require('react-native-dismisskeyboard');
@@ -93,6 +93,7 @@ export default class HomeScreen extends React.Component {
         <View style={styles.inputContainer}>
           <View>
             <Text style={styles.header}>Salt & Prepr</Text>
+            <Text style={styles.title}>What ingredients do you have?</Text>
           </View>
         </View>
       
@@ -232,14 +233,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    fontSize: 35,
+    fontSize: 50,
     textAlign: 'center',
     paddingTop: 20,
     margin: 10,
     fontWeight: 'bold'
   },
+  title: {
+    fontSize: 35,
+    textAlign: 'center',
+    paddingTop: 10,
+    margin: 10,
+  },
+  text: {
+    fontSize: 25,
+  },
   inputContainer: {
-    paddingTop: 60
+    paddingTop: 60,
+    margin: 10,
   },
   textInput: {
     borderColor: '#CCCCCC',
@@ -255,7 +266,7 @@ const styles = StyleSheet.create({
     borderColor: '#007BFF',
     backgroundColor: '#007BFF',
     padding: 15,
-    margin: 5
+    margin: 10
   },
   saveButtonText: {
     color: '#FFFFFF',
