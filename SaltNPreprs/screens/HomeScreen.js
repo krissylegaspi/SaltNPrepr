@@ -24,6 +24,7 @@ import {
 import FoodCard from '../components/FoodCard'
 import { MonoText } from '../components/StyledText';
 import * as firebase from 'firebase'
+import { Card } from 'react-native-elements';
 
 // var dismissKeyboard = require('react-native-dismisskeyboard');
 // import {
@@ -108,7 +109,6 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.title}>What ingredients do you have?</Text>
           </View>
         </View>
-      
       
         <View style={styles.inputContainer}>
           <TextInput

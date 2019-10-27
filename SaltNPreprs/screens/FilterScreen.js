@@ -13,6 +13,7 @@ import {
   Alert,
   dismissKeyboard,
   BackHandler,
+  FlatList,
 } from 'react-native';
 import {
   Form,
@@ -33,6 +34,8 @@ import {
 
 import {
     CheckBox,
+    ListItem,
+    List,
 } from 'react-native-elements';
 
 
@@ -98,6 +101,7 @@ export default class FilterScreen extends React.Component {
             style={styles.checkStyle}
             title='Vegan'
             checked={this.state.veganCheck? true : false}
+            // onLongPress={this.state.veganCheck? true : false}
             leftText={"CheckBox"}
         />
         <CheckBox
@@ -151,13 +155,13 @@ export default class FilterScreen extends React.Component {
           <TouchableOpacity
             style={styles.saveButton}
             onPress={ () =>
-              {this.saveData()
-                this.textInput.clear()
+              {
+                this.props.navigation.navigate('CardScreenRoute')
               }
             }
             // onKeyPress = {()=>{this.saveData;}}
           >
-            <Text style={styles.saveButtonText}>Save</Text>
+            <Text style={styles.saveButtonText}>GetResults</Text>
           </TouchableOpacity>
         
 

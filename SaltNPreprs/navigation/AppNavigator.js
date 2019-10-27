@@ -3,6 +3,8 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 
 import MainTabNavigator from './MainTabNavigator';
 import FilterScreen from '../screens/FilterScreen';
+import CardScreen from '../screens/CardScreen';
+
 
 import {config} from '../components/src/firebaseConfig'
 
@@ -14,6 +16,7 @@ export default createAppContainer(
     // Read more at https://reactnavigation.org/docs/en/auth-flow.html
     Main: MainTabNavigator,
     FilterRoute: FilterScreen,
-    BackButton: MainTabNavigator
+    BackButton: MainTabNavigator,
+    CardScreenRoute : CardScreen
   })
 );
