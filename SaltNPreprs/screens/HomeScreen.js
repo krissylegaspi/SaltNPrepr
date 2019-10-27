@@ -21,9 +21,10 @@ import {
   Text
 } from 'native-base';
 
-
+// import SignIn from '../screens/SignIn';
 import { MonoText } from '../components/StyledText';
 import * as firebase from 'firebase'
+import ApiCall from '../components/ApiCall';
 
 // var dismissKeyboard = require('react-native-dismisskeyboard');
 // import {
@@ -108,7 +109,7 @@ export default class HomeScreen extends React.Component {
           </View>
         </View>
       
-      
+        {/* <SignIn /> */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}
@@ -126,7 +127,6 @@ export default class HomeScreen extends React.Component {
             keyboardType="default"
             // onChangeText={(orderInstructions) => this.setState({orderInstructions})}
           />
-
           
         </View>
 
@@ -159,6 +159,14 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.saveButtonText}>Filter</Text>
           </TouchableOpacity>
 
+
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={()=>{
+              this.props.navigation.navigate('ResultsRoute')}}
+          >
+            <Text style={styles.saveButtonText}>Get Results</Text>
+          </TouchableOpacity>
           </View>
       </ScrollView>
     );
@@ -244,7 +252,6 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     backgroundColor: '#fff',
   },
-<<<<<<< HEAD
   header: {
     fontSize: 35,
     textAlign: 'center',
@@ -275,10 +282,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 20,
     textAlign: 'center'
-=======
-  api: {
-    marginTop: 100,
->>>>>>> dat
   },
   developmentModeText: {
     marginBottom: 20,

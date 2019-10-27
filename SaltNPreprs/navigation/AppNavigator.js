@@ -3,6 +3,7 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 
 import MainTabNavigator from './MainTabNavigator';
 import FilterScreen from '../screens/FilterScreen'
+import ApiCall from '../components/ApiCall';
 
 import {config} from '../components/src/firebaseConfig'
 
@@ -13,6 +14,7 @@ export default createAppContainer(
     // You could add another route here for authentication.
     // Read more at https://reactnavigation.org/docs/en/auth-flow.html
     Main: MainTabNavigator,
-    FilterRoute: FilterScreen
+    FilterRoute: FilterScreen,
+    ResultsRoute: ApiCall
   })
 );
