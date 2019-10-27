@@ -2,7 +2,8 @@ import React from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 
 import MainTabNavigator from './MainTabNavigator';
-import FilterScreen from '../screens/FilterScreen';
+import FilterScreen from '../screens/FilterScreen'
+import ApiCall from '../components/ApiCall';
 
 import {config} from '../components/src/firebaseConfig'
 
@@ -15,5 +16,6 @@ export default createAppContainer(
     Main: MainTabNavigator,
     FilterRoute: FilterScreen,
     BackButton: MainTabNavigator
+    ResultsRoute: ApiCall
   })
 );
