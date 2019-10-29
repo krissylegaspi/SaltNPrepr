@@ -27,17 +27,23 @@ export default class CardScreen extends Component{
     constructor(props){
         super(props)
         this.state = {idList : null}
+
+        this.getStuff = this.getStuff.bind(this)
     }
 
-    componentDidMount(){
+    getStuff = async() => {
         self = this
-        firebase.database().ref("/user/ids").once('value').then(function(snapshot) {
-            self.setState({idList:snapshot.val()})
-            
-          });
+        await firebase.database().ref("/user/ids").once('value').then(function(snapshot) {
+        self.setState({idList:snapshot.val()})
+        console.log(self.state)
+        });
+
+
+    }
+    componentDidMount(){
+        this.getStuff()
 
         
-
         console.log("component successfully mounted")
     }
     render(){

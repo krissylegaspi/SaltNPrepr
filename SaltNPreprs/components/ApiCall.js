@@ -7,77 +7,283 @@ import {
     Text,
     TouchableOpacity,
     View,
-    Button
-  } from 'react-native';
+    Button,
+    Slider
+    } from 'react-native';
+    import * as firebase from 'firebase';
 
-// export default class apiCall extends React.Component {
+    const API_KEY = 'apiKey=3336f204245d4eddb17bea39f4d67dc9';
+    const BASEURL = 'https://api.spoonacular.com/recipes/findByIngredients';
+
+  // export default class apiCall extends React.Component {
 export default class ApiCall extends Component {
     constructor(props){
         super(props);
         this.state = {
             data: null,
             loaded: false,
-            error: null
+            error: null,
+            results: [],
+            finished: false
         }
     }
-    apiKey = 'c95e63677b2c8d5efadb98ac65adf11a';
-    apiID = 'fcfaf7f1';
-    baseURL = 'https://api.edamam.com/search?'
-    getData = (ev)=>{
-        let url = this.baseURL + 'q=chicken&app_id='+ this.apiID +'&app_key=' + this.apiKey + '&from=0&to=3&calories=591-722&health=alcohol-free';
-        // let h = new Headers();
-        // h.append("x-rapidapi-host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",);
-        // h.append("x-rapidapi-key", "b8a40f1b07mshcd8c6692e5dfb3ep1cbf10jsnb77bd3b493bf");
+
+    showData = (data)=>{
+        this.setState({loaded:true, data});
+        console.log(this.state.data);
+
+        // let obj = JSON.parse(this.state.data);
+        // console.log(data);
+        // this.setState({foodInfo:obj})
+
+    }
+
+    //Gets all receipes using these ingredients
+
+    
+    getRecipes = async (ev)=>{
+        
+        var obj;
+        self = this;
+        // ingr1 = "chicken";
+        // ingr2 = "peas"
+        // console.log("state:",this.state.results);
+        self = this
+        await firebase.database().ref("/user/foodItems").once('value').then(function(snapshot){
+            var val = snapshot.val()
+            console.log(val)
+            self.setState({queryList: val})
+
+        });
+        let url = BASEURL + '?ingredients=';
+        let ingredients = this.state.queryList;
+        for(i = 0; i < ingredients.length; i++) {
+            url += ingredients[i] += ',+'
+        }
+        url += '&0number=30&' + API_KEY;
+        console.log(url);
+        // let url = BASEURL + '?ingredients=' + ingr1 + ',+' + ingr2 + ',+' + '&0number=10&' + API_KEY;
+        
         let req = new Request(url, {
-            // headers: h,
             method: 'GET'
         });
-        fetch(req)
+        await fetch(req)
         .then(response=>response.json())
-        .then(this.showData)
+        .then(
+            this.showData)
+ 
         .catch()
+        // console.log(this.state.data)
+        this.getResults();
     }
-    showData = (data)=>{
-        this.setState({loaded:true});
-        console.log(data);
+    
+    // Gets viable recipes
+    getResults() {
+        let list = this.state.data
+        let idList = []
+        let results = []
+        // console.log(list[0].missedIngredientCount);
+        for (i = 0; i < list.length; i++) {
+            if (list[i].missedIngredientCount < 5) { //change to 0
+                console.log("adding ", list[i].title)
+                idList.push(list[i].id)
+                results.push(list[i])
+                this.getInstructions(list[i].id,list[i].title,list[i].image)
+            }
+        }
+        this.state.data = results;
+        console.log(this.state.data)
+        firebase.database().ref('/user/').update({ids:idList})
+        this.state.finished = true;
+
+        // console.log(this.state.results)
     }
+    
+    //Gets instructions based on the recipe ID of the narrowed recipe results from getResults
+    getInstructions = async (id,title,pic,ev)=>{
+        
+        // console.log("instructions")
+        // console.log("state:",this.state.results);
+        let url = "https://api.spoonacular.com/recipes/"+ id + "/analyzedInstructions?" + API_KEY;
+        console.log(url);
+        let req = new Request(url, {
+            method: 'GET'
+        });
+        await fetch(req)
+        .then(response=>response.json())
+        .then(
+            // this.showData)
+            data => {
+                // this.setState({loaded:true, results:data});
+                //data = recipes from list of ids
+                
+                firebase.database().ref('/results/'+id +'/').update({instructions:data,title,pic})
+                this.state.results.push(data)
+                // console.log(this.state.results)
+            })
+        .catch()
+
+    }    
+    
     componentDidMount(){
-        // fetch("https://jsonplaceholder.typicode.com/users")
-        // .then(response => response.json())
-        // .then((responseJson)=> {
-        //     this.setState({
-        //     loading: false,
-        //     dataSource: responseJson
-        //     })
-        // })
-        // .catch(error=>console.log(error)) //to catch the errors if any
+       
+        this.getRecipes();
+        // this.getInstructions("324694");
     }
-    render() { 
+    render() {
+        if (this.state.finished == true) {
+            this.props.navigation.navigate('CardScreenRoute')
+            
+        }
         return (
-            <View style={styles.countainer}>
-                <Text>
-                    API Call:
-                </Text>
-                <Button title="Get Data" onPress={this.getData} />
-                {
-                    this.state.data && this.state.data.length > 0 && (
-                        this.state.data.map( comment => (
-                            <Text key={comment.id} style={styles.txt}>
-                                { comment.email }
-                            </Text>
-                        ))
-                    )}
-            </View>
+            
+            <ScrollView>
+            <View style={styles.inputContainer}>
+
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={()=>{
+              this.props.navigation.navigate('CardScreenRoute')}}
+          >
+            <Text style={styles.saveButtonText}>Show Results</Text>
+          </TouchableOpacity>
+          </View>
+            </ScrollView>
         )
     }
  }
 
-const styles = StyleSheet.create({
+ const styles = StyleSheet.create({
     container: {
+      paddingTop: 40,
       flex: 1,
+      paddingTop: 0,
       backgroundColor: '#fff',
-    }
-});
+    },
+    header: {
+      fontSize: 50,
+      textAlign: 'center',
+      paddingTop: 20,
+      margin: 10,
+      fontWeight: 'bold'
+    },
+    title: {
+      fontSize: 35,
+      textAlign: 'center',
+      paddingTop: 10,
+      margin: 10,
+    },
+    text: {
+      fontSize: 25,
+    },
+    inputContainer: {
+      paddingTop: 60,
+      margin: 10,
+    },
+    textInput: {
+      borderColor: '#CCCCCC',
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
+      height: 50,
+      fontSize: 25,
+      paddingLeft: 20,
+      paddingRight: 20
+    },
+    saveButton: {
+      borderWidth: 1,
+      borderColor: '#007BFF',
+      backgroundColor: '#007BFF',
+      padding: 15,
+      margin: 10
+    },
+    saveButtonText: {
+      color: '#FFFFFF',
+      fontSize: 20,
+      textAlign: 'center'
+    },
+    developmentModeText: {
+      marginBottom: 20,
+      color: 'rgba(0,0,0,0.4)',
+      fontSize: 14,
+      lineHeight: 19,
+      textAlign: 'center',
+    },
+    contentContainer: {
+      paddingTop: 30,
+    },
+    welcomeContainer: {
+      alignItems: 'center',
+      marginTop: 10,
+      marginBottom: 20,
+    },
+    welcomeImage: {
+      width: 100,
+      height: 80,
+      resizeMode: 'contain',
+      marginTop: 3,
+      marginLeft: -10,
+    },
+    getStartedContainer: {
+      alignItems: 'center',
+      marginHorizontal: 50,
+    },
+    homeScreenFilename: {
+      marginVertical: 7,
+    },
+    codeHighlightText: {
+      color: 'rgba(96,100,109, 0.8)',
+    },
+    codeHighlightContainer: {
+      backgroundColor: 'rgba(0,0,0,0.05)',
+      borderRadius: 3,
+      paddingHorizontal: 4,
+    },
+    getStartedText: {
+      fontSize: 17,
+      color: 'rgba(96,100,109, 1)',
+      lineHeight: 24,
+      textAlign: 'center',
+    },
+    tabBarInfoContainer: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      ...Platform.select({
+        ios: {
+          shadowColor: 'black',
+          shadowOffset: { width: 0, height: -3 },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+        },
+        android: {
+          elevation: 20,
+        },
+      }),
+      alignItems: 'center',
+      backgroundColor: '#fbfbfb',
+      paddingVertical: 20,
+    },
+    tabBarInfoText: {
+      fontSize: 17,
+      color: 'rgba(96,100,109, 1)',
+      textAlign: 'center',
+    },
+    navigationFilename: {
+      marginTop: 5,
+    },
+    helpContainer: {
+      marginTop: 15,
+      alignItems: 'center',
+    },
+    helpLink: {
+      paddingVertical: 15,
+    },
+    helpLinkText: {
+      fontSize: 14,
+      color: '#2e78b7',
+    },
+  });
 
 // import React, {Component} from 'react';
 // import {

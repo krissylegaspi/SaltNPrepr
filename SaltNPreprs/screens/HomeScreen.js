@@ -25,6 +25,7 @@ import FoodCard from '../components/FoodCard'
 import { MonoText } from '../components/StyledText';
 import * as firebase from 'firebase'
 import { Card } from 'react-native-elements';
+import ApiCall from '../components/ApiCall';
 
 // var dismissKeyboard = require('react-native-dismisskeyboard');
 // import {
@@ -42,7 +43,8 @@ export default class HomeScreen extends React.Component {
 
     firebase.database().ref("/user/").update({
 
-      foodItems : []
+      foodItems : [],
+      ids: []
     })
     this.handleChangeInput = this.handleChangeInput.bind(this);
     this.saveData = this.saveData.bind(this);
@@ -79,7 +81,7 @@ export default class HomeScreen extends React.Component {
       this.array = this.state.input;
     }
     else {
-      this.array.push(this.state.input.trim());
+      this.array.push(this.state.input.trim().toLowerCase());
     }
     this.state.input = '';
     console.log(this.array.length);
@@ -121,13 +123,12 @@ export default class HomeScreen extends React.Component {
             ref={input => { this.textInput = input }}
             // style={styles.additionalTextInput}
             multipline={true}
-            autoCapitalize="sentences"
+            // autoCapitalize="sentences"
             autoCorrect={true}
             returnKeyType="done"
             keyboardType="default"
             // onChangeText={(orderInstructions) => this.setState({orderInstructions})}
           />
-
           
         </View>
 
@@ -160,6 +161,14 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.saveButtonText}>Filter</Text>
           </TouchableOpacity>
 
+
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={()=>{
+              this.props.navigation.navigate('ResultsRoute')}}
+          >
+            <Text style={styles.saveButtonText}>Get Results</Text>
+          </TouchableOpacity>
           </View>
       </ScrollView>
     );

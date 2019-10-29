@@ -156,7 +156,7 @@ export default class FilterScreen extends React.Component {
             style={styles.saveButton}
             onPress={ () =>
               {
-                this.props.navigation.navigate('CardScreenRoute')
+                this.props.navigation.navigate('ResultsRoute')
               }
             }
             // onKeyPress = {()=>{this.saveData;}}
